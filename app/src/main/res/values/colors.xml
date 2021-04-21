@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+
+    <color name="background">#215366</color>
+    <color name="loadingBackground">#55000000</color>
+
+    <color name="button_helpee">#E39D32</color>
+    <color name="button_wait">#5773FF</color>
+    <color name="button_recording">#DD5C51</color>
+    <color name="button_playing">#197111</color>
+
+    <color name="sub_button_helper">#197111</color>
+    <color name="sub_button_next">#3F60FD</color>
+    <color name="sub_button_retry">#FD8F3F</color>
+
+    <color name="button_cancel">#FD553F</color>
+
+    <color name="text_registration">#5591e0</color>
+    <color name="text_registration_title">#F3FFB1</color>
+    <color name="text_registration_info">#918DFF</color>
+
+    <color name="disabled">#959595</color>
+
+    <color name="chatting_me">@android:color/white</color>
+    <color name="chatting_other">#00BAFF</color>
+</resources>

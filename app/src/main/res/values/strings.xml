@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">이게뭐여</string>
+
+    <string name="remote_monster_API_key">19c897a85fb5cd6c098450573ab3d33a09b35ead8c7cc270735ee68cab964ff3</string>
+</resources>

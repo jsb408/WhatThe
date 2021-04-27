@@ -31,13 +31,17 @@
         android:id="@+id/cardViewChattingImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="2dp"
-        android:visibility="gone">
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="4dp"
+        android:minWidth="180dp"
+        android:visibility="gone"
+        app:cardCornerRadius="5dp">
 
         <ImageView
             android:id="@+id/imageChatting"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:adjustViewBounds="true"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
     </androidx.cardview.widget.CardView>

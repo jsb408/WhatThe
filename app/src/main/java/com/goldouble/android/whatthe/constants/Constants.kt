@@ -29,7 +29,7 @@ data class ChattingData(
     val date: Date = Date(),
     val content: String? = null,
     val image: String? = null,
-    val sender: String = ""
+    val sender: String? = null
 )
 
 fun kSetActionBar(activity: AppCompatActivity) {

@@ -15,7 +15,7 @@ import com.goldouble.android.whatthe.MediaProjectionPermissionActivity
 import com.goldouble.android.whatthe.R
 import com.goldouble.android.whatthe.constants.*
 
-class MediaProjectionManagerService : Service() {
+open class MediaProjectionManagerService : Service() {
     private val FOREGROUND_SERVICE_ID = 1000
     private val CHANNEL_ID = "MediaProjectionService"
 
@@ -85,6 +85,11 @@ class MediaProjectionManagerService : Service() {
         }
     }
 
+    fun createMediaProjection() {
+        Log.e("SERVICE", "CREATE")
+        getPermission()
+    }
+
     private fun getPermission(intent: Intent? = null) {
         MediaProjectionBroadcastReceiver.register(this, ::action)
         startActivity(Intent(this, MediaProjectionPermissionActivity::class.java).apply {
@@ -102,6 +107,7 @@ class MediaProjectionManagerService : Service() {
         val data = intent.getParcelableExtra<Intent>(EXTRA_REQUEST_DATA)
         mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data!!)
         mediaProjection.registerCallback(object : MediaProjection.Callback() { }, null)
+        Log.e("MEDIA", "INITIALIZED")
     }
 
     private fun rejectMediaProjection() {
@@ -130,6 +136,9 @@ class MediaProjectionManagerService : Service() {
                     null,
                     null
             )
+            Log.d("VIRTUAL DISPLAY", "CREATED")
+        } else {
+            Log.e("VIRTUAL DISPLAY", "NOT CREATED")
         }
     }
 

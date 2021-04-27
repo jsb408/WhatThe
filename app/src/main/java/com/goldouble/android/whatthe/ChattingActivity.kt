@@ -7,12 +7,14 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.PixelCopy
 import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.goldouble.android.whatthe.adapter.ChattingRecyclerViewAdapter
@@ -20,11 +22,14 @@ import com.goldouble.android.whatthe.constants.*
 import com.goldouble.android.whatthe.databinding.ActivityChattingBinding
 import com.goldouble.android.whatthe.ui.FloatingSurfaceView
 import com.goldouble.android.whatthe.ui.FloatingView
+import com.goldouble.android.whatthe.ui.SurfaceViewHolder
 import com.goldouble.android.whatthe.util.MediaProjectionManagerService
 import com.remotemonster.sdk.RemonCall
 import com.remotemonster.sdk.data.AudioType
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
-
 
 class ChattingActivity : AppCompatActivity() {
     lateinit var binding: ActivityChattingBinding
@@ -52,7 +57,7 @@ class ChattingActivity : AppCompatActivity() {
 
     private val PERMISSION_REQUEST = 0
 
-    lateinit var floatingSurfaceView: FloatingSurfaceView
+    //lateinit var floatingSurfaceView: FloatingSurfaceView
     lateinit var floatingView: FloatingView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,9 +87,9 @@ class ChattingActivity : AppCompatActivity() {
             )
         } else {
             checkOverlayPermission()
-            floatingSurfaceView = FloatingSurfaceView(this).also {
-                mWindowManager.addView(it, floatingViewLayoutParmas)
-            }
+//            floatingSurfaceView = FloatingSurfaceView(this).also {
+//                mWindowManager.addView(it, floatingViewLayoutParmas)
+//            }
             floatingView = FloatingView(this, mWindowManager, floatingViewLayoutParmas) {
                 screenShot()
             }.also { it.show() }
@@ -108,9 +113,29 @@ class ChattingActivity : AppCompatActivity() {
     private fun screenShot() {
         val bitmap = Bitmap.createBitmap(displayInfo.widthPixels, displayInfo.heightPixels, Bitmap.Config.ARGB_8888)
         val listener = PixelCopy.OnPixelCopyFinishedListener { }
-        PixelCopy.request(floatingSurfaceView.surfaceView, bitmap, listener, Handler())
+        val fileName = UUID.randomUUID().toString()
+        PixelCopy.request(floatingView.surfaceView, bitmap, listener, Handler())
 
-        binding.imageView2.setImageBitmap(bitmap)
+        /*val file = File(cacheDir, "screenshots")
+        file.delete()
+        file.createNewFile()
+        val fileOutputStream = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)*/
+
+        val file = File(kScreenshotDir(dataDir) + "/screenshot.jpg")
+        val fileOutputStream = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+
+        kStorage.child("screenshots/$fileName").putFile(file.toUri()).addOnSuccessListener {
+            kFirestore.collection(Table.CHATTING.id).add(
+                hashMapOf(
+                    "room" to intent.getStringExtra("roomNo"),
+                    "date" to Date(),
+                    "image" to fileName
+                )
+            )
+        }
+
         Log.d("FLOAT", "CAPTURED(width: ${bitmap.width}, height: ${bitmap.height})")
     }
 
@@ -146,11 +171,11 @@ class ChattingActivity : AppCompatActivity() {
 
     private fun checkOverlayPermission() {
         if(!Settings.canDrawOverlays(this)) {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-//            registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-//                if(!it) finish()
-//            }.launch(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-            startActivityForResult(intent, PERMISSION_REQUEST)
+            //val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+                if(!it) finish()
+            }.launch(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+            //startActivityForResult(intent, PERMISSION_REQUEST)
         }
     }
 
@@ -174,7 +199,6 @@ class ChattingActivity : AppCompatActivity() {
         super.onDestroy()
         if(kAuth.currentUser!!.isAnonymous) {
             mWindowManager.removeView(floatingView)
-            mWindowManager.removeView(floatingSurfaceView)
         }
     }
 }

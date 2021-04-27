@@ -9,9 +9,18 @@ import com.goldouble.android.whatthe.R
 
 class FloatingView(context: Context, private val windowManager: WindowManager, private val windowLayoutParams: WindowManager.LayoutParams, val tapListener: () -> Unit)
     : FrameLayout(context) {
-    private val background = ImageView(context).apply {
-        setImageResource(R.drawable.floating_button_background)
-        layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+//    private val background = ImageView(context).apply {
+//        setImageResource(R.drawable.floating_button_background)
+//        layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+//    }
+
+//    private val floatingSurfaceView = FloatingSurfaceView(context).also {
+//        windowManager.addView(it, windowLayoutParams)
+//    }
+
+    val surfaceView = SurfaceView(context).apply {
+        holder.addCallback(SurfaceViewHolder(context))
+        layoutParams = LayoutParams(200, 200 * (windowLayoutParams.height / windowLayoutParams.width))
     }
 
     var startX = 0f
@@ -24,7 +33,7 @@ class FloatingView(context: Context, private val windowManager: WindowManager, p
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
 
-        addView(background)
+        addView(surfaceView)
 
         setOnTouchListener { view, event ->
             view.performClick()

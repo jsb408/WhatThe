@@ -1,16 +1,19 @@
 package com.goldouble.android.whatthe.adapter
 
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.goldouble.android.whatthe.constants.ChattingData
 import com.goldouble.android.whatthe.R
+import com.goldouble.android.whatthe.constants.*
 import com.goldouble.android.whatthe.databinding.ItemChattingBinding
-import com.goldouble.android.whatthe.constants.kAuth
+import java.lang.Exception
 
 class ChattingRecyclerViewAdapter(options: FirestoreRecyclerOptions<ChattingData>)
     : FirestoreRecyclerAdapter<ChattingData, ChattingRecyclerViewAdapter.ItemViewHolder>(options) {
@@ -37,8 +40,17 @@ class ChattingRecyclerViewAdapter(options: FirestoreRecyclerOptions<ChattingData
                     cardViewChattingText.setCardBackgroundColor(ContextCompat.getColor(binding.root.context, sender.color))
                     textChatting.text = data.content
                 } else {
+                    cardViewChattingText.visibility = View.GONE
+                    cardViewChattingImage.visibility = View.VISIBLE
+
                     cardViewChattingImage.setCardBackgroundColor(ContextCompat.getColor(binding.root.context, sender.color))
-                    //TODO: 이미지 삽입
+                    kStorage.child("screenshots/${data.image}").downloadUrl.addOnSuccessListener { uri ->
+                        try {
+                            Glide.with(binding.root.context).load(uri).into(binding.imageChatting)
+                        } catch( e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
                 }
             }
         }

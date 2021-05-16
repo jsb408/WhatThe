@@ -3,7 +3,7 @@
 어르신을 위한 스마트 도우미 음성채팅 앱 
 
 - 진행기간 : 2020. 12. 06 ~ 2020. 12. 20
-- 사용기술 : Android Studio, Kotlin, Firebase, MediaProjection, MediaRecorder, MediaPlayer, Glide
+- 사용기술 : Android Studio, Kotlin, Firebase, MediaProjection, MediaRecorder, MediaPlayer, RemoteMonster, Glide
 
 <p align="center"><img src="https://user-images.githubusercontent.com/55052074/116388312-a8592380-a856-11eb-906c-37425c9a0bd7.jpg" width="30%"/> <img src="https://user-images.githubusercontent.com/55052074/116388318-abecaa80-a856-11eb-9d15-0958a252ba87.jpg" width="30%"/></p>
 
